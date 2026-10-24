@@ -25,4 +25,14 @@ public class CsvCleaner {
     public String removeExtraSpaces(String value) {
         return value.strip().replaceAll("\\s+", " ");
     }
+
+    public String toTitleCase(String value) {
+        String[] words = toLowerCase(value).split(" ");
+        for (int i = 0; i < words.length; i++) {
+            if (!words[i].isEmpty()) {
+                words[i] = words[i].substring(0, 1).toUpperCase() + words[i].substring(1);
+            }
+        }
+        return String.join(" ", words);
+    }
 }

@@ -76,4 +76,20 @@ public class CsvCleanerTest {
         String clean = cleaner.removeExtraSpaces(dirty);
         assertEquals("South Wing", clean);
     }
+
+    @Test
+    void titleCaseAllLowercaseWords(){
+        assertEquals("East Wing", cleaner.toTitleCase("east wing"));
+    }
+
+    @Test
+    void titleCaseAllCapitalsWord(){
+        String clean = cleaner.toTitleCase("PAEDIATRICS");
+        assertEquals("Paediatrics", clean);
+    }
+
+    @Test
+    void titleCaseOfEmptyTextIsEmpty(){
+        assertEquals("", cleaner.toTitleCase(""));
+    }
 }

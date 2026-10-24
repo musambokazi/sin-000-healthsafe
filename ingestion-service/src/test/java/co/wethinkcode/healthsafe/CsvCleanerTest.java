@@ -3,9 +3,8 @@ package co.wethinkcode.healthsafe;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class CsvCleanerTest {
     private CsvCleaner cleaner;
@@ -25,7 +24,49 @@ public class CsvCleanerTest {
     @Test
     void valuesWithCapitalLettersTurnToLowerCases(){
         String dirty = "W-01";
-        String clean = cleaner.handleCases(dirty);
+        String clean = cleaner.toLowerCase(dirty);
         assertEquals("w-01", clean);
+    }
+
+    @Test
+    void cleanBedValueKeepsValidNumbers(){
+        String dirtyBed = "0";
+        String cleanBed = cleaner.cleanBedValue(dirtyBed);
+        assertEquals("0",cleanBed);
+    }
+
+    @Test
+    void keepValidNumbers(){
+        String dirty = "3";
+        String clean = cleaner.cleanBedValue(dirty);
+        assertEquals("3", clean);
+    }
+
+    @Test
+    void negativeBedValueIsRejected(){
+        String dirty = "-1";
+        String clean = cleaner.cleanBedValue(dirty);
+        assertNull(clean);
+    }
+
+    @Test
+    void wordInsteadOfNumberIsRejected(){
+        String badBedValue = "five";
+        String bedCleanValue = cleaner.cleanBedValue(badBedValue);
+        assertNull(bedCleanValue);
+    }
+
+    @Test
+    void naBedValueIsRejected(){
+        String dirtyBed = "N/A";
+        String cleanBed = cleaner.cleanBedValue(dirtyBed);
+        assertNull(cleanBed);
+    }
+
+    @Test
+    void emptyBedValueIsRejected(){
+        String dirty = "";
+        String clean = cleaner.cleanBedValue(dirty);
+        assertNull(clean);
     }
 }

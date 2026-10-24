@@ -69,4 +69,11 @@ public class CsvCleanerTest {
         String clean = cleaner.cleanBedValue(dirty);
         assertNull(clean);
     }
+
+    @Test
+    void removesDoubleSpacesInside(){
+        String dirty = "South  Wing";
+        String clean = cleaner.removeExtraSpaces(dirty);
+        assertEquals("South Wing", clean);
+    }
 }

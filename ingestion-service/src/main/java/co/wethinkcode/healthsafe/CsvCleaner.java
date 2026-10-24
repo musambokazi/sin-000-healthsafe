@@ -21,4 +21,8 @@ public class CsvCleaner {
             return null;
         }
     }
+
+    public String removeExtraSpaces(String value) {
+        return value.strip().replaceAll("\\s+", " ");
+    }
 }

@@ -9,16 +9,16 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class CsvReaderTest {
-    private CsvReader reader;
+public class WardCsvReaderTest {
+    private WardCsvReader reader;
 
     @BeforeEach
     void setUp(){
-        reader = new CsvReader();
+        reader = new WardCsvReader();
     }
 
     @Test
-    void readsOneRowPerLine(){
+    void skipHeaderAndReadsOneRowPerLine(){
         String line1 = "ward_id, Wing ,department,beds_available";
         String line2 = "W-01, East Wing ,Cardiology,3";
         String line3 = "W-04,North Wing,Oncology,-1";

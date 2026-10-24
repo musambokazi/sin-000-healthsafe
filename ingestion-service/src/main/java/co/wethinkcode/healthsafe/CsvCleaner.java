@@ -10,13 +10,13 @@ public class CsvCleaner {
         return value.toLowerCase();
     }
 
-    public String cleanBedValue(String value) {
+    public Integer cleanBedValue(String value) {
         try {
             int number = Integer.parseInt(value);
-            if (number < 0){
+            if (number < 0) {
                 return null;
             }
-            return value;
+            return number;
         } catch (NumberFormatException e) {
             return null;
         }
@@ -34,5 +34,14 @@ public class CsvCleaner {
             }
         }
         return String.join(" ", words);
+    }
+
+
+    public Ward cleanRow(String[] value) {
+        String id = toLowerCase(stripWhiteSpaces(value[0]));
+        String wing = toTitleCase(removeExtraSpaces(value[1]));
+        String department = toTitleCase(removeExtraSpaces(value[2]));
+        Integer bedsAvailable = cleanBedValue(value[3]);
+        return new Ward(id, wing, department, bedsAvailable);
     }
 }

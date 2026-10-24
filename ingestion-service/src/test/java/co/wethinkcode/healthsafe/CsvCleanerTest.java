@@ -29,44 +29,41 @@ public class CsvCleanerTest {
     }
 
     @Test
-    void cleanBedValueKeepsValidNumbers(){
-        String dirtyBed = "0";
-        String cleanBed = cleaner.cleanBedValue(dirtyBed);
-        assertEquals("0",cleanBed);
+    void zeroBedsIsValid() {
+        Integer clean = cleaner.cleanBedValue("0");
+        assertEquals(0, clean);
     }
 
     @Test
-    void keepValidNumbers(){
-        String dirty = "3";
-        String clean = cleaner.cleanBedValue(dirty);
-        assertEquals("3", clean);
+    void positiveBedsIsValid() {
+        Integer clean = cleaner.cleanBedValue("3");
+        assertEquals(3, clean);
     }
 
     @Test
     void negativeBedValueIsRejected(){
         String dirty = "-1";
-        String clean = cleaner.cleanBedValue(dirty);
+        Integer clean = cleaner.cleanBedValue(dirty);
         assertNull(clean);
     }
 
     @Test
     void wordInsteadOfNumberIsRejected(){
-        String badBedValue = "five";
-        String bedCleanValue = cleaner.cleanBedValue(badBedValue);
-        assertNull(bedCleanValue);
+        Integer clean = cleaner.cleanBedValue("five");
+        assertNull(clean);
     }
 
     @Test
     void naBedValueIsRejected(){
         String dirtyBed = "N/A";
-        String cleanBed = cleaner.cleanBedValue(dirtyBed);
+        Integer cleanBed = cleaner.cleanBedValue(dirtyBed);
         assertNull(cleanBed);
     }
 
     @Test
     void emptyBedValueIsRejected(){
         String dirty = "";
-        String clean = cleaner.cleanBedValue(dirty);
+        Integer clean = cleaner.cleanBedValue(dirty);
         assertNull(clean);
     }
 
@@ -91,5 +88,24 @@ public class CsvCleanerTest {
     @Test
     void titleCaseOfEmptyTextIsEmpty(){
         assertEquals("", cleaner.toTitleCase(""));
+    }
+
+    @Test
+    void cleansOneMessyRowIntoOneWard() {
+        String[] row = {"w-05", "east wing", "PAEDIATRICS", "five"};
+        Ward ward = cleaner.cleanRow(row);
+        assertEquals("w-05", ward.id());
+        assertEquals("East Wing", ward.wing());
+        assertEquals("Paediatrics", ward.department());
+        assertNull(ward.bedsAvailable());
+    }
+
+    @Test
+    void cleansMessyIdInRow() {
+        String[] row = {" W-03 ", "east wing", "CARDIOLOGY", "0"};
+        Ward ward = cleaner.cleanRow(row);
+        assertEquals("w-03", ward.id());
+        assertEquals("Cardiology", ward.department());
+        assertEquals(0, ward.bedsAvailable());
     }
 }

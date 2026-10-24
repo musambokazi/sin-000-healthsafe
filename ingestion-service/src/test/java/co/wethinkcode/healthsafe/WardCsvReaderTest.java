@@ -27,4 +27,13 @@ public class WardCsvReaderTest {
         assertEquals(2, rows.size());
         assertEquals("W-01", rows.get(0)[0]);
     }
+
+    @Test
+    void emptyFileGivesEmptyRows(){
+        String fake = "";
+        List<String[]> row = reader.readLineByLine(new StringReader(fake));
+        assertEquals(0, row.size());
+    }
+
+
 }

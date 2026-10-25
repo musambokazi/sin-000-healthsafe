@@ -2,8 +2,10 @@ package co.wethinkcode.healthsafe;
 
 import io.javalin.Javalin;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class AlertLevelServiceApp {
-    private static int level = 0;
+    private static final AtomicInteger level = new AtomicInteger(0);
 
     public static void main(String[] args) {
         Javalin app = Javalin.create().start(7032);
@@ -15,5 +17,20 @@ public class AlertLevelServiceApp {
         app.get("/alert-level", ctx ->
                 ctx.contentType("application/json")
                         .result("{\"level\":" + level + "}"));
+
+        app.put("/alert-level", ctx -> {
+            try {
+                int newLevel = Integer.parseInt(ctx.body().trim());
+                if (!AlertLevel.isValidLevel(newLevel)){
+                    ctx.status(400);
+                    return;
+                }
+                level.set(newLevel);
+                ctx.contentType("application/json")
+                        .result("{\"level\":" + newLevel + "}");
+            }catch (NumberFormatException e){
+                ctx.status(400);
+            }
+        });
     }
 }

@@ -11,6 +11,9 @@ public class EquipmentAlertServiceApp {
 
         // TODO (Uses a Queue to guarantee delivery of critical medical equipment failure alerts.)
         // Mechanism: ActiveMQ Queue (guaranteed delivery)
+        EquipmentAlertListener listener = new EquipmentAlertListener();
+        listener.start();
+        app.get("/alerts", ctx -> ctx.json( listener.alerts() ));
     }
 }
 

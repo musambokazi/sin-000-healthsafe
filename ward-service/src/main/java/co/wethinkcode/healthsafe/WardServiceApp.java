@@ -27,9 +27,8 @@ public class WardServiceApp {
         app.get("/wards", ctx -> ctx.json(wards));
         app.get("/wards/{id}", ctx -> {
             String id = ctx.pathParam("id").toLowerCase();
-            Optional<Ward> ward = wards.stream()
-                    .filter(w -> w.id().equals(id))
-                    .findFirst();
+            Optional<Ward> ward = WardFinder.findById(wards, ctx.pathParam("id"));
+
             if (ward.isEmpty()) {
                 ctx.status(404)
                         .contentType("application/json")

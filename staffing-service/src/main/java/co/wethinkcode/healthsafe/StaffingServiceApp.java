@@ -16,6 +16,10 @@ public class StaffingServiceApp {
             .connectTimeout(Duration.ofSeconds(3))
             .build();
     private static final ObjectMapper mapper = new ObjectMapper();
+    private static final String WARD_URL =
+            System.getenv().getOrDefault("WARD_SERVICE_URL", "http://localhost:7031");
+    private static final String ALERT_URL =
+            System.getenv().getOrDefault("ALERT_LEVEL_URL", "http://localhost:7032");
 
     public static void main(String[] args) {
         Javalin app = Javalin.create().start(7033);
@@ -27,13 +31,13 @@ public class StaffingServiceApp {
         app.get("/staffing/{wardId}", ctx -> {
                     String wardId = ctx.pathParam("wardId").toLowerCase();
                     try {
-                        HttpResponse<String> ward = get("http://localhost:7031/wards/" + wardId);
+                        HttpResponse<String> ward = get(WARD_URL + "/wards/" + wardId);
                         if (ward.statusCode() == 404) {
                             ctx.status(404).contentType("application/json")
                                     .result("{\"error\":\"ward not found\"}");
                             return;
                         }
-                        HttpResponse<String> alert = get("http://localhost:7032/alert-level");
+                        HttpResponse<String> alert = get(ALERT_URL + "/alert-level");
                         int level = mapper.readTree(alert.body()).get("level").asInt();
 
                         int doctors = StaffingRules.doctorsOnCall(level);
@@ -43,7 +47,7 @@ public class StaffingServiceApp {
                                 .result("{\"error\":\"could not work out staffing\"}");
                     }
                 });
-        app.start(7033);
+
     }
 
     private static HttpResponse<String> get(String url) throws IOException, InterruptedException{

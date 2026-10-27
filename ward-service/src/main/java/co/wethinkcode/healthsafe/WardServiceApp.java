@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class WardServiceApp {
+    private static final String INGESTION_URL =
+            System.getenv().getOrDefault("INGESTION_URL", "http://localhost:7030");
 
     public static void main(String[] args) {
         Javalin app = Javalin.create().start(7031);
@@ -42,7 +44,7 @@ public class WardServiceApp {
         try {
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest
-                    .newBuilder(URI.create("http://localhost:7030/wards"))
+                    .newBuilder(URI.create(INGESTION_URL + "/wards"))
                     .GET()
                     .build();
             HttpResponse<String> response =
